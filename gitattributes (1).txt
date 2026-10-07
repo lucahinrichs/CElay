@@ -1,0 +1,3 @@
+Builds/** linguist-vendored
+build/** linguist-vendored
+JuceLibraryCode/** linguist-vendored
