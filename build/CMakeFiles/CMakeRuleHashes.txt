@@ -1,0 +1,4 @@
+# Hashes of file build rules.
+6e5a27a339458e6d2c8c6c38f54a7bd0 CElay_artefacts/JuceLibraryCode/CElay_AU/PkgInfo
+61f7d3dd498e633699e422f7c8c27fa1 CElay_artefacts/JuceLibraryCode/CElay_VST3/PkgInfo
+fb18bc3a5085a3b5087917af8bc1a3e6 CMakeFiles/CElay_vst3_helper

@@ -1,0 +1,10 @@
+{
+	"InstallScripts" : 
+	[
+		"/Users/lucahinrichs/Documents/JUCE/CElay/build/juce/tools/cmake_install.cmake",
+		"/Users/lucahinrichs/Documents/JUCE/CElay/build/juce/tools/modules/cmake_install.cmake",
+		"/Users/lucahinrichs/Documents/JUCE/CElay/build/juce/tools/extras/Build/cmake_install.cmake",
+		"/Users/lucahinrichs/Documents/JUCE/CElay/build/juce/tools/extras/Build/juceaide/cmake_install.cmake"
+	],
+	"Parallel" : false
+}
