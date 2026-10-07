@@ -28,7 +28,7 @@ A custom C++ / JUCE audio effect plugin implementing a digital delay with custom
 
 ## Project Structure
 
-```text
+```
 CElay/
 ├── Source/
 │   ├── PluginProcessor.h / .cpp   # Audio processing logic & buffer management
@@ -36,3 +36,23 @@ CElay/
 ├── Builds/                        # IDE / Build system exported projects
 ├── CElay.jucer                    # Projucer configuration file
 └── CMakeLists.txt                 # CMake build script
+```
+
+---
+
+## Building the Plugin
+
+1. Clone the repository:
+   git clone [https://github.com/lucahinrichs/CElay.git](https://github.com/lucahinrichs/CElay.git)
+2. Open CElay.jucer in Projucer and export to your preferred IDE (Xcode / Visual Studio).
+3. Build the target as a VST3 or Standalone application.
+
+---
+
+## Roadmap / Planned Features
+
+- [x] Basic delay line with circular buffer logic
+- [x] Dry/Wet parameter control with GUI attachment
+- [ ] Parameter smoothing (juce::SmoothedValue) to eliminate modulation artifacts
+- [ ] High-pass / Low-pass filters in the feedback loop
+- [ ] Custom LookAndFeel UI redesign
