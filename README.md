@@ -5,7 +5,7 @@ A custom C++ / JUCE audio effect plugin implementing a digital delay with custom
 > **Status:** Practice Project - Work in Progress
 
 
-<img width="390" height="308" alt="Bildschirmfoto 2026-10-07 um 21 07 32" src="https://github.com/user-attachments/assets/40a20f56-66ca-446e-9f39-cccf8472ca7b" />
+<img width="391" height="293" alt="CElay - GUI" src="https://github.com/user-attachments/assets/1c7ea80d-bef4-4a39-8b8e-c6d3606ca750" />
 
 
 ---
