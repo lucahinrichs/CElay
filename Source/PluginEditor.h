@@ -14,14 +14,13 @@
 //==============================================================================
 /**
 */
-class CElayAudioProcessorEditor  : public juce::AudioProcessorEditor
-{
+class CElayAudioProcessorEditor : public juce::AudioProcessorEditor {
 public:
-    CElayAudioProcessorEditor (CElayAudioProcessor&);
+    CElayAudioProcessorEditor(CElayAudioProcessor&);
     ~CElayAudioProcessorEditor() override;
 
     //==============================================================================
-    void paint (juce::Graphics&) override;
+    void paint(juce::Graphics&) override;
     void resized() override;
 
 private:
@@ -37,7 +36,7 @@ private:
     
     std::unique_ptr<SliderAttachment> timeAttachment;
     std::unique_ptr<SliderAttachment> feedbackAttachment;
-    std::unique_ptr<SliderAttachment> mixAttachement;
+    std::unique_ptr<SliderAttachment> mixAttachment;
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (CElayAudioProcessorEditor)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(CElayAudioProcessorEditor)
 };
