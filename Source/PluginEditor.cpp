@@ -11,8 +11,7 @@
 
 //==============================================================================
 CElayAudioProcessorEditor::CElayAudioProcessorEditor (CElayAudioProcessor& p)
-    : AudioProcessorEditor (&p), audioProcessor (p)
-{
+    : AudioProcessorEditor (&p), audioProcessor (p) {
     // Make sure that before the constructor has finished, you've set the
     // editor's size to whatever you need it to be.
     setSize (400, 300);
@@ -35,17 +34,15 @@ CElayAudioProcessorEditor::CElayAudioProcessorEditor (CElayAudioProcessor& p)
     // Attachments to values
     timeAttachment = std::make_unique<SliderAttachment>(audioProcessor.apvts, "time", timeSlider);
     feedbackAttachment = std::make_unique<SliderAttachment>(audioProcessor.apvts, "feedback", feedbackSlider);
-    mixAttachement = std::make_unique<SliderAttachment>(audioProcessor.apvts, "mix", mixSlider);
+    mixAttachment = std::make_unique<SliderAttachment>(audioProcessor.apvts, "mix", mixSlider);
     
 }
 
-CElayAudioProcessorEditor::~CElayAudioProcessorEditor()
-{
+CElayAudioProcessorEditor::~CElayAudioProcessorEditor() {
 }
 
 //==============================================================================
-void CElayAudioProcessorEditor::paint (juce::Graphics& g)
-{
+void CElayAudioProcessorEditor::paint (juce::Graphics& g) {
     // BG Color
     g.fillAll (juce::Colour (0xff1e1e24));
 
@@ -62,8 +59,7 @@ void CElayAudioProcessorEditor::paint (juce::Graphics& g)
     
 }
 
-void CElayAudioProcessorEditor::resized()
-{
+void CElayAudioProcessorEditor::resized() {
     // Positioning
     timeSlider.setBounds (50, 90, 100, 120);
     feedbackSlider.setBounds (250, 90, 100, 120);
