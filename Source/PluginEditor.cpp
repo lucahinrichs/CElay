@@ -38,6 +38,11 @@ CElayAudioProcessorEditor::CElayAudioProcessorEditor(CElayAudioProcessor& p)
     mixSlider.setSliderStyle(juce::Slider::SliderStyle::LinearHorizontal);
     mixSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 60, 20);
     addAndMakeVisible(mixSlider);
+        
+    // Tempo sync values
+    syncComboBox.addItemList({ "1/16", "1/8", "1/4", "1/2", "1/1" }, 1);
+    addAndMakeVisible(syncButton);
+    addAndMakeVisible(syncComboBox);
     
     // Attachments to values
     timeAttachment = std::make_unique<SliderAttachment>(audioProcessor.apvts, "time", timeSlider);
@@ -46,7 +51,18 @@ CElayAudioProcessorEditor::CElayAudioProcessorEditor(CElayAudioProcessor& p)
         
     driveButtonAttachment = std::make_unique<ButtonAttachment>(audioProcessor.apvts, "driveOn", driveButton);
     driveSliderAttachment = std::make_unique<SliderAttachment>(audioProcessor.apvts, "drive", driveSlider);
-    
+        
+    syncButtonAttachment = std::make_unique<ButtonAttachment>(audioProcessor.apvts, "syncOn", syncButton);
+    syncComboBoxAttachment = std::make_unique<ComboBoxAttachment>(audioProcessor.apvts, "syncDivision", syncComboBox);
+
+    auto updateSyncState = [this]() {
+        bool isSynced = syncButton.getToggleState();
+        timeSlider.setEnabled(!isSynced);
+        syncComboBox.setEnabled(isSynced);
+    };
+
+    syncButton.onClick = updateSyncState;
+    updateSyncState();
 }
 
 CElayAudioProcessorEditor::~CElayAudioProcessorEditor() {
@@ -55,26 +71,40 @@ CElayAudioProcessorEditor::~CElayAudioProcessorEditor() {
 //==============================================================================
 void CElayAudioProcessorEditor::paint(juce::Graphics& g) {
     // BG Color
-    g.fillAll(juce::Colour(0xff1e1e24));
+    juce::ColourGradient gradient(
+            juce::Colour(0xff38a3ca), 0.0f, 0.0f,
+            juce::Colour(0xff141418), 0.0f, static_cast<float>(getHeight()),
+            false // -> linear gradient
+        );
+        g.setGradientFill(gradient);
+        g.fillAll();
 
     // Render title text
     g.setColour(juce::Colours::white);
     g.setFont(20.0f);
     g.drawText("CElay", getLocalBounds().removeFromTop(40), juce::Justification::centred, true);
 
-    // Knob text
+    // Knob Labels
     g.setFont(14.0f);
-    g.drawText("Time", 30, 60, 100, 20, juce::Justification::centred);
-    g.drawText("Feedback", 150, 60, 100, 20, juce::Justification::centred);
-    g.drawText("Drive", 270, 60, 100, 20, juce::Justification::centred);
-    g.drawText("Dry / Wet Mix", 30, 210, 440, 20, juce::Justification::centred);
+    g.drawText("Time", 50, 50, 100, 20, juce::Justification::centred);
+    g.drawText("Feedback", 200, 50, 100, 20, juce::Justification::centred);
+    g.drawText("Drive", 350, 50, 100, 20, juce::Justification::centred);
     
+    // Mix Label for mix sliders
+    g.drawText("Dry / Wet Mix", 30, 218, 440, 20, juce::Justification::centred);
 }
 
 void CElayAudioProcessorEditor::resized() {
-    timeSlider.setBounds(30, 90, 100, 120);
-    feedbackSlider.setBounds(150, 90, 100, 120);
-    driveSlider.setBounds(270, 90, 100, 120);
-    driveButton.setBounds(380, 120, 90, 30);
-    mixSlider.setBounds(30, 235, 440, 45);
+    // knobs
+    timeSlider.setBounds(50, 72, 100, 95);
+    feedbackSlider.setBounds(200, 72, 100, 95);
+    driveSlider.setBounds(350, 72, 100, 95);
+    driveButton.setBounds(355, 170, 90, 20);
+
+    // Sync controls centered under time knob
+    syncButton.setBounds(60, 170, 80, 20);
+    syncComboBox.setBounds(55, 192, 90, 22);
+    
+    // mix slider on the bottom
+    mixSlider.setBounds(30, 240, 440, 45);
 }

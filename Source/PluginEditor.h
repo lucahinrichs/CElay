@@ -35,8 +35,12 @@ private:
     juce::ToggleButton driveButton { "Drive On"};
     juce::Slider driveSlider;
     
+    juce::ToggleButton syncButton {"Sync"};
+    juce::ComboBox syncComboBox;
+    
     using SliderAttachment = juce::AudioProcessorValueTreeState::SliderAttachment;
     using ButtonAttachment = juce::AudioProcessorValueTreeState::ButtonAttachment;
+    using ComboBoxAttachment = juce::AudioProcessorValueTreeState::ComboBoxAttachment;
 
     std::unique_ptr<SliderAttachment> timeAttachment;
     std::unique_ptr<SliderAttachment> feedbackAttachment;
@@ -44,6 +48,9 @@ private:
     
     std::unique_ptr<ButtonAttachment> driveButtonAttachment;
     std::unique_ptr<SliderAttachment> driveSliderAttachment;
+    
+    std::unique_ptr<ButtonAttachment> syncButtonAttachment;
+    std::unique_ptr<ComboBoxAttachment> syncComboBoxAttachment;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(CElayAudioProcessorEditor)
 };

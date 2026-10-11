@@ -140,18 +140,48 @@ void CElayAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::M
 
 
     // fetch parameter values from the value tree
-    float currentDelayTimeMs = apvts.getRawParameterValue("time")->load();
+    float freeTimeMs = apvts.getRawParameterValue("time")->load();
     float currentFeedback = apvts.getRawParameterValue("feedback")->load();
     float currentMix = apvts.getRawParameterValue("mix")->load();
     
-    bool driveEnabled = apvts.getRawParameterValue("driveOn")->load();
+    bool driveEnabled = apvts.getRawParameterValue("driveOn")->load() > 0.5f;
     float driveDb = apvts.getRawParameterValue("drive")->load();
     
     // db -> linear factor (0 dB -> 1.0, 20 dB -> 10.0, 40 dB -> 100.0)
     float driveGain = juce::Decibels::decibelsToGain(driveDb);
+    
+    // Sync parameter
+    bool syncEnabled = apvts.getRawParameterValue("syncOn")->load() > 0.5f;
+    int divisionIndex = static_cast<int>(apvts.getRawParameterValue("syncDivision")->load());
+    
+    // set delay time
+    float currentDelayTimeMs = freeTimeMs; // standard ms value
+    
+    if (syncEnabled) {
+        double bpm = 120.0; // fall back value
+        
+        // read bpm value from playhead
+        if (auto* playHead = getPlayHead()) {
+            if (auto position = playHead->getPosition()) {
+                if (position->getBpm().hasValue()) {
+                    bpm = *position->getBpm();
+                }
+            }
+        }
+        // length of quarter note in ms (60000 ms / bpm)
+        double quarterNoteMs = 60000.0 / bpm;
+        
+        // mulitpliers based on value array order
+        static const float multipliers[] = { 0.25f, 0.5f, 1.0f, 2.0f, 4.0f };
+        
+        currentDelayTimeMs = static_cast<float>(quarterNoteMs * multipliers[divisionIndex]);
+    }
 
+    
     // dynamic calculation of samples (both channels at the same time)
     int delayInSamples = static_cast<int>(getSampleRate() * (currentDelayTimeMs / 1000.0f));
+    
+    
 
     for (int channel = 0; channel < totalNumInputChannels; ++channel) {
         auto* channelData = buffer.getWritePointer(channel);
@@ -163,7 +193,7 @@ void CElayAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::M
         // iterating through each sample in current audio block
         for (int sample = 0; sample < bufferLength; ++sample) {
             
-            // 1. Original Dry Signal
+            // // grab current dry audio sample
             float drySample = channelData[sample];
             
             float signalToDelay = drySample;
@@ -172,9 +202,6 @@ void CElayAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::M
                 signalToDelay = std::tanh(drySample * driveGain);
             }
             
-            // grab current audio sample
-            float inSample = channelData[sample];
-
             // setting read head position (delay time in the "past")
             int readPosition = channelWritePosition - delayInSamples;
 
@@ -190,7 +217,7 @@ void CElayAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::M
             delayData[channelWritePosition] = signalToDelay + (delaySample * currentFeedback);
 
             // Dry/Wet Mix (Dry * (1 - mix) + Wet * mix)
-            channelData[sample] = (inSample * (1.0f - currentMix)) + (delaySample * currentMix);
+            channelData[sample] = (drySample * (1.0f - currentMix)) + (delaySample * currentMix);
 
             // move recording head to the next sample
             channelWritePosition++;
@@ -238,7 +265,6 @@ juce::AudioProcessorValueTreeState::ParameterLayout CElayAudioProcessor::createP
 
     // Delay time: 10ms to 2000ms, Standard value: 500ms
     layout.add(std::make_unique<juce::AudioParameterFloat>("time", "Time", 10.0f, 2000.0f, 500.0f));
-
     // Feedback: 0.0 (0%) to 0.95 (95%), Standard value: 0.5 (50%)
     layout.add(std::make_unique<juce::AudioParameterFloat>("feedback", "Feedback", 0.0f, 0.95f, 0.5f));
 
@@ -247,9 +273,15 @@ juce::AudioProcessorValueTreeState::ParameterLayout CElayAudioProcessor::createP
     
     // Distortion Toggle (On/Off)
     layout.add(std::make_unique<juce::AudioParameterBool>("driveOn", "Drive On", false));
-    
     // Distortion Drive Amount (1.0 = Clean/unity, 40.0 = High Gain)
     layout.add(std::make_unique<juce::AudioParameterFloat>("drive", "Drive", 0.0f, 40.0f, 0.0f));
+    
+    // Synced delay time toggle
+    layout.add(std::make_unique<juce::AudioParameterBool>("syncOn", "Sync On", false));
+    
+    // Drop down with tempo divisions
+    juce::StringArray divisions =  { "1/16", "1/8", "1/4", "1/2", "1/1" };
+    layout.add(std::make_unique<juce::AudioParameterChoice>("syncDivision", "Division", divisions, 2));
     
     return layout;
 }
