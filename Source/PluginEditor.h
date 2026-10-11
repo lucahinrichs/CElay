@@ -14,14 +14,13 @@
 //==============================================================================
 /**
 */
-class CElayAudioProcessorEditor  : public juce::AudioProcessorEditor
-{
+class CElayAudioProcessorEditor : public juce::AudioProcessorEditor {
 public:
-    CElayAudioProcessorEditor (CElayAudioProcessor&);
+    CElayAudioProcessorEditor(CElayAudioProcessor&);
     ~CElayAudioProcessorEditor() override;
 
     //==============================================================================
-    void paint (juce::Graphics&) override;
+    void paint(juce::Graphics&) override;
     void resized() override;
 
 private:
@@ -33,11 +32,18 @@ private:
     juce::Slider feedbackSlider;
     juce::Slider mixSlider;
     
-    using SliderAttachment = juce::AudioProcessorValueTreeState::SliderAttachment;
+    juce::ToggleButton driveButton { "Drive On"};
+    juce::Slider driveSlider;
     
+    using SliderAttachment = juce::AudioProcessorValueTreeState::SliderAttachment;
+    using ButtonAttachment = juce::AudioProcessorValueTreeState::ButtonAttachment;
+
     std::unique_ptr<SliderAttachment> timeAttachment;
     std::unique_ptr<SliderAttachment> feedbackAttachment;
-    std::unique_ptr<SliderAttachment> mixAttachement;
+    std::unique_ptr<SliderAttachment> mixAttachment;
+    
+    std::unique_ptr<ButtonAttachment> driveButtonAttachment;
+    std::unique_ptr<SliderAttachment> driveSliderAttachment;
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (CElayAudioProcessorEditor)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(CElayAudioProcessorEditor)
 };
