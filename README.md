@@ -21,7 +21,7 @@ A custom C++ / JUCE audio effect plugin implementing a digital delay with custom
 
 ## Tech Stack & Architecture
 
-* **Language:** C++17 / C++20
+* **Language:** C++
 * **Framework:** JUCE
 * **Build Systems:** Projucer (`.jucer`), CMake
 * **Target Platforms:** macOS (VST3 / Standalone / AU)
