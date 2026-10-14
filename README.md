@@ -59,6 +59,7 @@ CElay/
 - [x] Dry/Wet parameter control with GUI attachment
 - [x] Pre-FX Drive stage (`std::tanh` soft-clipping)
 - [x] Tempo / Beat Sync (BPM-based delay divisions)
+- [ ] Dotted Delay times
 - [ ] Parameter smoothing (`juce::SmoothedValue`) to eliminate modulation artifacts
 - [ ] High-pass / Low-pass filters in the feedback loop
 - [ ] Custom LookAndFeel UI redesign
